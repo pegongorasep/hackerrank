@@ -28,6 +28,43 @@ fun dfs(node: Int, graph: Array<IntArray>, seen: MutableList<Boolean>) {
     }
 }
 
+/**
+ * Solution converting it to adjacency list
+ */
+fun findCircleNumAdjList(isConnected: Array<IntArray>): Int {
+    val adjList = MutableList<MutableList<Int>>(isConnected.size) { mutableListOf() }
+    for (i in 0 until isConnected.size) {
+        for (j in i + 1 until isConnected.size) {
+            if (isConnected[i][j] == 1) {
+                adjList[i].add(j)
+                adjList[j].add(i)
+            }
+        }
+    }
+
+    println(adjList)
+
+    var numberOfProvinces = 0
+    val seen = MutableList(adjList.size) { false }
+    for (i in 0 until adjList.size) {
+        if (seen[i].not()) {
+            numberOfProvinces++
+            dfs(i, adjList, seen)
+        }
+    }
+
+    return numberOfProvinces
+}
+
+fun dfs(node: Int, graph: List<List<Int>>, seen: MutableList<Boolean>) {
+    if (seen[node]) return
+
+    seen[node] = true
+    for (i in graph[node]) {
+        dfs(i, graph, seen)
+    }
+}
+
 fun main() {
     println("case 1")
     println(
