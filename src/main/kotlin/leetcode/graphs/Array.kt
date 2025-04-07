@@ -12,3 +12,15 @@ fun Array<IntArray>.matrixToAdjList(): MutableList<MutableList<Int>> {
     }
     return adjList
 }
+
+fun Array<Array<Int>>.printAdjList() {
+    println("adjList:")
+    forEachIndexed { index, value ->
+        print("$index: ")
+        value.forEach {
+            print("$it ")
+        }
+        println()
+    }
+    println()
+}
