@@ -27,6 +27,27 @@ fun Array<Array<Int>>.printAdjList() {
     println()
 }
 
+fun Array<Array<Int>>.directedEdgesListToAdjList(n: Int): Array<Array<Int>> {
+    // Step 1: Convert to Array<MutableList<Int>>
+    val tempAdjList = Array(n) { mutableListOf<Int>() }
+    forEach { edge ->
+        val u = edge[0]
+        val v = edge[1]
+        tempAdjList[u].add(v)
+    }
+
+    // Step 2: Find max degree for inner array size
+    val maxDegree = tempAdjList.maxOfOrNull { it.size } ?: 0
+
+    // Step 3: Convert to Array<Array<Int>> with -1 as sentinel
+    return Array(n) { u ->
+        val neighbors = tempAdjList[u]
+        Array(maxDegree) { i ->
+            if (i < neighbors.size) neighbors[i] else -1
+        }
+    }
+}
+
 // TODO remove duplication
 fun Array<Array<Int>>.toGraph(root: Int): Node {
     val nodes = HashMap<Int, Node>()

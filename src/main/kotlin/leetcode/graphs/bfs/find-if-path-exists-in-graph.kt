@@ -1,6 +1,10 @@
 package leetcode.graphs.bfs
 
+import leetcode.graphs.common.Node
+import leetcode.graphs.directedEdgesListToAdjList
+import leetcode.graphs.toGraph
 import java.util.*
+import kotlin.collections.HashSet
 
 /**
  * https://leetcode.com/problems/find-if-path-exists-in-graph/
@@ -32,6 +36,35 @@ fun validPath(n: Int, edges: Array<IntArray>, source: Int, destination: Int): Bo
     return false
 }
 
+// source is unused here
+fun validPathUsingGraphRepresentation(node: Node, source: Int, destination: Int): Boolean {
+    if (node.value == destination) return true
+
+    val queue = LinkedList<Node>()
+    val visited = HashSet<Int>()
+    queue.add(node)
+
+    while (queue.isNotEmpty()) {
+        val current = queue.pop()
+        if (current.value == destination) return true
+        current.children.forEach { child ->
+            if (visited.contains(child.value).not()) {
+                visited.add(child.value)
+                queue.add(child)
+            }
+        }
+    }
+
+    return false
+}
+
 fun main() {
-    println(validPath(3, arrayOf(intArrayOf(0, 1), intArrayOf(1, 2), intArrayOf(2, 0)), 0, 2))
+    val input = arrayOf(arrayOf(0, 1), arrayOf(1, 2), arrayOf(2, 0))
+//    println(validPath(3, input, 0, 2))
+
+    // this is not an adj list
+    val graph = input.directedEdgesListToAdjList(3).toGraph(0)
+    graph.printGraph()
+    val result = validPathUsingGraphRepresentation(graph, 0, 2)
+    println(result)
 }

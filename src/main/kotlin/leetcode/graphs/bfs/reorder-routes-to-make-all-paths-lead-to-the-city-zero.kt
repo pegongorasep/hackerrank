@@ -1,8 +1,6 @@
 package leetcode.graphs.bfs
 
 import java.util.*
-import kotlin.collections.HashMap
-import kotlin.math.abs
 
 /**
  * https://leetcode.com/problems/reorder-routes-to-make-all-paths-lead-to-the-city-zero/
@@ -11,36 +9,38 @@ import kotlin.math.abs
  */
 class SolutionMinReorder {
     fun minReorder(n: Int, connections: Array<IntArray>): Int {
+        // build a directed adjacency list (two-way)
         val adjList = List<MutableList<Pair<Int, Boolean>>>(n) { mutableListOf() }
         for (i in connections) {
             adjList[i[0]].add(Pair(i[1], true))
             adjList[i[1]].add(Pair(i[0], false))
         }
 
-        val stack = LinkedList<Pair<Int, Boolean>>()
+        val queue = LinkedList<Pair<Int, Boolean>>()
+        val visited = HashSet<Int>()
+        queue.add(Pair(0, false))
+
         val counter = Counter(0)
-        val seen = HashMap<Int, Unit>()
-        stack.add(Pair(0, false))
-        bfs(adjList, stack, counter, seen)
+        bfs(adjList, queue, counter, visited)
 
         return counter.value
     }
 
-    fun bfs(
+    private fun bfs(
         adjList: List<MutableList<Pair<Int, Boolean>>>,
-        stack: LinkedList<Pair<Int, Boolean>>,
+        queue: LinkedList<Pair<Int, Boolean>>,
         counter: Counter,
-        seen: HashMap<Int, Unit>
+        visited: HashSet<Int>
     ) {
-        while (stack.isNotEmpty()) {
-            val node = stack.poll()
-            seen[node.first] = Unit
+        while (queue.isNotEmpty()) {
+            val node = queue.poll()
+            visited.add(node.first)
 
-            if (node.second)
-                counter.value = counter.value + 1
+            // every time we find a road directed the other way increase counter
+            if (node.second) counter.value += 1
             for (i in adjList[node.first])
-                if (seen[i.first] == null)
-                    stack.add(i)
+                if (visited.contains(i.first).not())
+                    queue.add(i)
         }
     }
 
