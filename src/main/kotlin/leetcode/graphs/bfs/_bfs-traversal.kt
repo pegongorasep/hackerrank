@@ -25,7 +25,7 @@ fun bfsTraversal(adjList: Array<Array<Int>>, startNode: Int) {
 }
 
 fun main() {
-// Test 1: Linear graph (0 -> 1 -> 2 -> 3)
+    // Test 1: Linear graph (0 -> 1 -> 2 -> 3)
     val adjList1 = arrayOf(
         arrayOf(1),    // 0 -> 1
         arrayOf(2),    // 1 -> 2

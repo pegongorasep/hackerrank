@@ -1,5 +1,7 @@
 package leetcode.graphs.dfs
 
+import leetcode.graphs.common.Node
+
 /**
  * https://leetcode.com/problems/all-paths-from-source-to-target/description/
  *
@@ -38,11 +40,6 @@ fun dfs(node: Node, target: Int, path: List<Int>, result: MutableList<MutableLis
 
     return
 }
-
-class Node(
-    val value: Int,
-    val children: MutableList<Node>,
-)
 
 fun main() {
     //println(allPathsSourceTarget(arrayOf(intArrayOf(1, 2), intArrayOf(3), intArrayOf(3), intArrayOf())))
