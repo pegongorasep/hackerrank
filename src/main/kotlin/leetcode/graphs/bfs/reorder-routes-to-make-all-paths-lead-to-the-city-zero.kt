@@ -10,15 +10,15 @@ import java.util.*
 class SolutionMinReorder {
     fun minReorder(n: Int, connections: Array<IntArray>): Int {
         // build a directed adjacency list (two-way)
-        val adjList = List<MutableList<Pair<Int, Boolean>>>(n) { mutableListOf() }
+        val adjList = List<MutableList<Adjacency>>(n) { mutableListOf() }
         for (i in connections) {
-            adjList[i[0]].add(Pair(i[1], true))
-            adjList[i[1]].add(Pair(i[0], false))
+            adjList[i[0]].add(Adjacency(i[1], true))
+            adjList[i[1]].add(Adjacency(i[0], false))
         }
 
-        val queue = LinkedList<Pair<Int, Boolean>>()
+        val queue = LinkedList<Adjacency>()
         val visited = HashSet<Int>()
-        queue.add(Pair(0, false))
+        queue.add(Adjacency(0, false))
 
         val counter = Counter(0)
         bfs(adjList, queue, counter, visited)
@@ -27,23 +27,26 @@ class SolutionMinReorder {
     }
 
     private fun bfs(
-        adjList: List<MutableList<Pair<Int, Boolean>>>,
-        queue: LinkedList<Pair<Int, Boolean>>,
+        adjList: List<MutableList<Adjacency>>,
+        queue: LinkedList<Adjacency>,
         counter: Counter,
         visited: HashSet<Int>
     ) {
         while (queue.isNotEmpty()) {
             val node = queue.poll()
-            visited.add(node.first)
+            visited.add(node.value)
 
             // every time we find a road directed the other way increase counter
-            if (node.second) counter.value += 1
-            for (i in adjList[node.first])
-                if (visited.contains(i.first).not())
+            if (node.directedOut) counter.value += 1
+            for (i in adjList[node.value])
+                if (visited.contains(i.value).not())
                     queue.add(i)
         }
     }
 
+    class Adjacency(val value: Int, private val originalDirection: Boolean) {
+        val directedOut get() = originalDirection
+    }
     class Counter(var value: Int)
 }
 
